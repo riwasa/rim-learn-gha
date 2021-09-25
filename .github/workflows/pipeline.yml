@@ -31,6 +31,21 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
           
+      - name: Upload artifact
+        uses: actions/upload-artifact@main
+        with: 
+          name: build artifact
+          path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/download-artifact@main
+        with: 
+          name: build artifact
+          path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
