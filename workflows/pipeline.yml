@@ -1,0 +1,35 @@
+name: "Deploy to Azure"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+      
+env:
+  AZURE_WEBAPP_NAME: "rim-learn-gha-app"
+  AZURE_WEBAPP_PACKAGE_PATH: "."
+  DOTNET_VERSION: '3.1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@main
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-versiob: ${{ env.DOTNET_VERSION }}
+          
+      - name: Build
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          
+      - name: 
+  
